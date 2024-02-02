@@ -4,7 +4,7 @@ const initialState = {
     name: '',
     url: '',
     id: '',
-    abilities: '',
+    abilities: [],
     height: '',
     order: '',
     image: ''

@@ -2,8 +2,6 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { choosePoke } from "../redux/pokesSlice"
-// import { PokeCard } from "./PokeCard"
-// import { PokeImage } from "./PokeImage"
 
 let counterPage = 20
 let limitPerPage = 20
@@ -12,9 +10,6 @@ export const PokeList = () => {
     const dispatch = useDispatch()
 
     const [pokesList, setPokesList] = useState([])
-    const [isOpenCard, setIsOpenCard] = useState(false)
-    const [isOpenImg, setIsOpenImg] = useState(false)
-    const [pokeInfo, setPokeInfo] = useState({})
     const [disableNext, setDisableNext] = useState(false)
     const [disablePrev, setDisablePrev] = useState(true)
 
@@ -82,27 +77,11 @@ export const PokeList = () => {
                         key={key}
                         onClick={() => {
                             dispatch(choosePoke(poke))
-
-                            setIsOpenCard(false)  
-                            setPokeInfo(poke)               
-                            setIsOpenImg(true) 
                         }}
                         >
-                          <Link 
-                        to={`/pokecard`}                
-                        >
-                            {poke.name}
-                        </Link>
-                       <Link 
-                       to={`/pokeimage`}
-                        onDoubleClick={() => {
-                            setIsOpenImg(false) 
-                            setPokeInfo(poke) 
-                            setIsOpenCard(true)                                               
-                        }}                        
-                        >
-                            IMAGE
-                        </Link>
+                            <div className="list-container">
+                                <Link to={`/pokeimage`} >IMAGEN <Link to={`/pokecard`} >{poke.name}</Link></Link>
+                            </div>
                     </li>                         
                     )            
                 })}
