@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 export const PokeImage = (info) => {
   console.log('this is IMAGE')
@@ -32,6 +33,11 @@ export const PokeImage = (info) => {
                 <img src={pokeData} alt={pokeName} width={200} />
             </div>
           }
+          <div>
+            <button>
+                <Link to={'/'} >Regresar</Link>
+            </button>
+          </div>
         </div>
       )
   }

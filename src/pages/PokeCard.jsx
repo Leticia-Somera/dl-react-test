@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 export const PokeCard = (info) => {
   console.log('this is CARDDD')
@@ -38,6 +39,11 @@ export const PokeCard = (info) => {
                 <h3>Height: </h3> <p>{pokeData.height}</p>
             </div>
         }
+        <div>
+            <button>
+                <Link to={'/'} >Regresar</Link>
+            </button>
+        </div>
       </div>
     )
   }

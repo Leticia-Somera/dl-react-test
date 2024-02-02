@@ -71,27 +71,34 @@ export const PokeList = () => {
                 <h1>Pokemones</h1>    
                 <ul>    
                 {pokesList.map((poke, key) => {
-                    return(        
-                    <>   
-                    <li key={key} 
-                        onDoubleClick={() => {
-                            setIsOpenImg(false) 
-                            setPokeInfo(poke) 
-                            setIsOpenCard(true)                                               
-                        }}
+                    return (  
+                    <li key={key}>
+                        <Link 
+                        to={`/pokecard`}
                         onClick={() => {
                             setIsOpenCard(false)  
                             setPokeInfo(poke)               
                             setIsOpenImg(true) 
                         }}
-                        >{key+1}. {poke.name}</li>  
-                    </> 
+                        >
+                            {key+1}. {poke.name} 
+                        </Link>
+                       <Link 
+                       to={`/pokeimage`}
+                        onDoubleClick={() => {
+                            setIsOpenImg(false) 
+                            setPokeInfo(poke) 
+                            setIsOpenCard(true)                                               
+                        }}                        
+                        >
+                            {key+1}. {poke.name} 
+                        </Link>
+                    </li> 
+                        
+                        
                     )            
                 })}
                 </ul>
-                
-                {isOpenCard && <Link to='/pokecard'><PokeCard info={pokeInfo}  /></Link> } 
-                    {isOpenImg && <Link to='/pokeimage'><PokeImage info={pokeInfo}  /></Link> } 
             </div>
 
             <div className="btns-container">
@@ -102,6 +109,9 @@ export const PokeList = () => {
                     <button onClick={handlerNextPage} disabled={disableNext}>Siguiente</button>
                 </div>
             </div>       
+                
+            {isOpenCard && <Link to={`/pokecard/${pokeInfo.id}`}><PokeCard info={pokeInfo}  /></Link> } 
+            {isOpenImg && <Link to={`/pokeimage/${pokeInfo.id}`}><PokeImage info={pokeInfo}  /></Link> } 
         </div>
     )
 }
