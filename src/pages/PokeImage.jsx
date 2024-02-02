@@ -1,44 +1,40 @@
-import { useEffect, useState } from "react"
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import { useEffect } from "react"
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addPokeImg } from "../redux/pokesSlice";
 
-export const PokeImage = (info) => {
-  console.log('this is IMAGE')
-    //componente para mostrar cada carta
-    const [pokeData, setPokeData] = useState([])    
-    const pokeUrl = info.info.url
-    const pokeName = info.info.name
+export const PokeImage = () => {
+  const dispatch = useDispatch()
 
-    const getUniquePoke = (url) => {  
-      fetch(url)
-        .then(res =>res.json())
-        .then(data => {
-          const imgUrl = data.sprites?.front_default
+  const imgUrl = useSelector(state => state.pokemon.image) 
+  const pokeUrl = useSelector(state => state.pokemon.url)
+  const pokeName = useSelector(state => state.pokemon.name)
 
-          setPokeData(imgUrl)
-        })
-    }
-  
-    useEffect(() => {
-        getUniquePoke(pokeUrl)
-    }, [pokeUrl])
-  
-    if(!pokeData) return null     
-      return (
-        <div>
-          {pokeData &&
-            <div>            
-                <IoIosCloseCircleOutline />    
-                <h3>Name: {pokeName} </h3>            
-                <img src={pokeData} alt={pokeName} width={200} />
-            </div>
-          }
-          <div>
-            <button>
-                <Link to={'/'} >Regresar</Link>
-            </button>
-          </div>
-        </div>
-      )
+  const getUniquePoke = (url) => {  
+    fetch(url)
+      .then(res =>res.json())
+      .then(data => {
+        dispatch(addPokeImg(data.sprites.front_default))         
+      })    
+      .catch(error => console.log(error))
   }
   
+  useEffect(() => {
+      getUniquePoke(pokeUrl)    
+  }, [pokeUrl])
+    
+  return (
+    <div>
+        <div>               
+            <h3>Name: {pokeName} </h3>            
+            <img src={imgUrl} alt={pokeName} width={200} />
+        </div>
+      
+      <div>
+        <button>
+            <Link to={'/'} >Regresar</Link>
+        </button>
+      </div>
+    </div>
+  )
+}

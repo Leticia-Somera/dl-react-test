@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { PokeCard } from "./PokeCard"
-import { PokeImage } from "./PokeImage"
+import { useDispatch } from "react-redux"
+import { choosePoke } from "../redux/pokesSlice"
+// import { PokeCard } from "./PokeCard"
+// import { PokeImage } from "./PokeImage"
 
 let counterPage = 20
 let limitPerPage = 20
 
-export const PokeList = () => {
+export const PokeList = () => {    
+    const dispatch = useDispatch()
+
     const [pokesList, setPokesList] = useState([])
     const [isOpenCard, setIsOpenCard] = useState(false)
     const [isOpenImg, setIsOpenImg] = useState(false)
@@ -14,11 +18,12 @@ export const PokeList = () => {
     const [disableNext, setDisableNext] = useState(false)
     const [disablePrev, setDisablePrev] = useState(true)
 
-    const getAllPokes = async (limitPerPage, offset) => {
+    const getAllPokes =  (limitPerPage, offset) => {
         const URL = `https://pokeapi.co/api/v2/pokemon/?limit=${limitPerPage}&offset=${offset}`
-        const res = await fetch(URL)
-        const data = await res.json()
-        setPokesList(data.results)
+        fetch(URL)
+            .then(res => res.json())
+            .then(data => setPokesList(data.results))        
+            .catch(error => console.log(error))
     }
 
     useEffect(() => {
@@ -30,16 +35,16 @@ export const PokeList = () => {
     const handlerNextPage = () => {
         counterPage += 20
         if(counterPage <=20) {
-        setDisablePrev(true)
-        setDisableNext(false)
-        limitPerPage = 20
+            setDisablePrev(true)
+            setDisableNext(false)
+            limitPerPage = 20
         } else if(counterPage >20 && counterPage < 160) {
-        setDisablePrev(false)
-        setDisableNext(false)
+            setDisablePrev(false)
+            setDisableNext(false)
         } else {
-        limitPerPage = 11
-        setDisablePrev(false)
-        setDisableNext(true)
+            limitPerPage = 11
+            setDisablePrev(false)
+            setDisableNext(true)
         }
         getAllPokes(limitPerPage, counterPage)
     }
@@ -49,18 +54,18 @@ export const PokeList = () => {
     const handlerPrevPage = () => {
         counterPage = counterPage-20
         if(counterPage <=20) {
-        counterPage = 20
-        setDisablePrev(true)
-        setDisableNext(false)
+            counterPage = 20
+            setDisablePrev(true)
+            setDisableNext(false)
         } else if(counterPage >20 && counterPage < 160) {
-        counterPage -= 20
-        setDisablePrev(false)
-        setDisableNext(false)
-        limitPerPage = 20
+            counterPage -= 20
+            setDisablePrev(false)
+            setDisableNext(false)
+            limitPerPage = 20
         } else {
-        limitPerPage = 11
-        setDisablePrev(false)
-        setDisableNext(true)
+            limitPerPage = 11
+            setDisablePrev(false)
+            setDisableNext(true)
         }
         getAllPokes(limitPerPage, counterPage)
     }
@@ -69,19 +74,24 @@ export const PokeList = () => {
         <div>
             <div>
                 <h1>Pokemones</h1>    
-                <ul>    
+                <ul 
+                >    
                 {pokesList.map((poke, key) => {
                     return (  
-                    <li key={key}>
-                        <Link 
-                        to={`/pokecard`}
+                    <li 
+                        key={key}
                         onClick={() => {
+                            dispatch(choosePoke(poke))
+
                             setIsOpenCard(false)  
                             setPokeInfo(poke)               
                             setIsOpenImg(true) 
                         }}
                         >
-                            {key+1}. {poke.name} 
+                          <Link 
+                        to={`/pokecard`}                
+                        >
+                            {poke.name}
                         </Link>
                        <Link 
                        to={`/pokeimage`}
@@ -91,11 +101,9 @@ export const PokeList = () => {
                             setIsOpenCard(true)                                               
                         }}                        
                         >
-                            {key+1}. {poke.name} 
+                            IMAGE
                         </Link>
-                    </li> 
-                        
-                        
+                    </li>                         
                     )            
                 })}
                 </ul>
@@ -108,10 +116,7 @@ export const PokeList = () => {
                 <div>
                     <button onClick={handlerNextPage} disabled={disableNext}>Siguiente</button>
                 </div>
-            </div>       
-                
-            {isOpenCard && <Link to={`/pokecard/${pokeInfo.id}`}><PokeCard info={pokeInfo}  /></Link> } 
-            {isOpenImg && <Link to={`/pokeimage/${pokeInfo.id}`}><PokeImage info={pokeInfo}  /></Link> } 
+            </div>      
         </div>
     )
 }

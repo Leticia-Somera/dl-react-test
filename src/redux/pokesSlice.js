@@ -2,25 +2,36 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     name: '',
-    username: '',
-    email: '',
+    url: '',
+    id: '',
+    abilities: '',
+    height: '',
+    order: '',
+    image: ''
 }
 
-export const userSlice = createSlice({
-    name: 'user',
+export const pokesSlice = createSlice({
+    name: 'pokemon',
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            const {name, username, email} = action.payload
+        choosePoke: (state, action) => {
+            const {name, url} = action.payload
             state.name = name
-            state.username = username
-            state.email = email
+            state.url = url
         },
-        changeEmail: (state, action) => {
-            state.email = action.payload
-        }
+        infoPoke: (state, action) => {
+            const {id, abilities, height, order} = action.payload
+            state.id = id
+            state.abilities = abilities
+            state.height = height
+            state.order = order
+        },
+        addPokeImg: (state, action) => {
+            state.image = action.payload
+        
+        },
     }
 })
 
-export const { addUser, changeEmail} = userSlice.actions
-export default userSlice.reducer
+export const { choosePoke, infoPoke, addPokeImg } = pokesSlice.actions
+export default pokesSlice.reducer
