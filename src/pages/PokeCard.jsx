@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 export const PokeCard = (info) => {
+  console.log('this is CARDDD')
+
     //componente para mostrar cada carta
     const [pokeData, setPokeData] = useState([])
     const pokeUrl = info.info.url
