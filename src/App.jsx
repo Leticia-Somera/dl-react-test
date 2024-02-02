@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { PokeCard } from './pages/PokeCard'
+import { PokeImage } from './pages/PokeImage'
+// import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 let counterPage = 20
 let limitPerPage = 20
 
-  //componente para mostrar lista
+//componente para mostrar lista
 const PokeList = () => {
   const [pokesList, setPokesList] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenCard, setIsOpenCard] = useState(false)
+  const [isOpenImg, setIsOpenImg] = useState(false)
   const [pokeInfo, setPokeInfo] = useState({})
   const [disableNext, setDisableNext] = useState(false)
   const [disablePrev, setDisablePrev] = useState(true)
 
   const getAllPokes = async (limitPerPage, offset) => {
     const URL = `https://pokeapi.co/api/v2/pokemon/?limit=${limitPerPage}&offset=${offset}`
-    console.log('URL: ' , URL)
-
     const res = await fetch(URL)
     const data = await res.json()
     setPokesList(data.results)
@@ -30,7 +31,6 @@ const PokeList = () => {
   //Actualiza el endpoint
   const handlerNextPage = () => {
     counterPage += 20
-    console.log('counter:', counterPage)
     if(counterPage <=20) {
       setDisablePrev(true)
       setDisableNext(false)
@@ -49,9 +49,7 @@ const PokeList = () => {
   //Habilitar o deshablitar botón de Anterior
   //Actualiza el endpoint
   const handlerPrevPage = () => {
-    console.log('counter:', counterPage)
     counterPage = counterPage-20
-
     if(counterPage <=20) {
       counterPage = 20
       setDisablePrev(true)
@@ -77,15 +75,27 @@ const PokeList = () => {
           {pokesList.map((poke, key) => {
             return(        
               <>   
-              <li key={key} onClick={() => 
-                {setIsOpen(true)
-                  setPokeInfo(poke)}
+              <li key={key} 
+                onDoubleClick={() => 
+                  {
+                    setIsOpenImg(false) 
+                    setIsOpenCard(true)                  
+                    setPokeInfo(poke)
+                  }
+                }
+                onClick={() => 
+                  {
+                    setIsOpenCard(false)                 
+                    setIsOpenImg(true) 
+                    setPokeInfo(poke)
+                  }
                 }
                 >{key+1}. {poke.name}</li>  
               </> 
             )            
           })}
-              {isOpen && <PokeCard info={pokeInfo}  />} 
+              {isOpenCard && <PokeCard info={pokeInfo}  />} 
+              {isOpenImg && <PokeImage info={pokeInfo}  />} 
         </ul>
       </div>
 
@@ -105,9 +115,13 @@ const PokeList = () => {
 
 function App() {
   return (
-    <>
-      <PokeList />
-    </>     
+    <PokeList />
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route path='/' element={<PokeList />} />
+    //     <Route path='/pokecard' element={<PokeCard />} />
+    //   </Routes>
+    // </BrowserRouter>     
   )
 }
 
